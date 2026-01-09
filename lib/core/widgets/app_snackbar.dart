@@ -4,7 +4,6 @@ import '../constants/app_colors.dart';
 enum SnackbarType { success, error, warning, info }
 
 class AppSnackbar {
-  /// Show an animated custom snackbar
   static void show(
     BuildContext context, {
     required String message,
@@ -13,9 +12,9 @@ class AppSnackbar {
     VoidCallback? onAction,
     Duration duration = const Duration(seconds: 3),
   }) {
-    // Determine icon and color
     Color backgroundColor;
     IconData iconData;
+
     switch (type) {
       case SnackbarType.success:
         backgroundColor = AppColors.success;
@@ -36,31 +35,26 @@ class AppSnackbar {
         break;
     }
 
-    // Create overlay entry
     final overlay = OverlayEntry(
-      builder: (context) {
-        return _AnimatedSnackbar(
-          message: message,
-          icon: iconData,
-          backgroundColor: backgroundColor,
-          actionLabel: actionLabel,
-          onAction: onAction,
-          duration: duration,
-        );
-      },
+      builder: (_) => _TopAnimatedSnackbar(
+        message: message,
+        icon: iconData,
+        backgroundColor: backgroundColor,
+        actionLabel: actionLabel,
+        onAction: onAction,
+        duration: duration,
+      ),
     );
 
-    // Insert overlay
-    Overlay.of(context).insert(overlay);
+    Overlay.of(context, rootOverlay: true).insert(overlay);
 
-    // Remove after duration + animation
-    Future.delayed(duration + const Duration(milliseconds: 500), () {
+    Future.delayed(duration + const Duration(milliseconds: 400), () {
       overlay.remove();
     });
   }
 }
 
-class _AnimatedSnackbar extends StatefulWidget {
+class _TopAnimatedSnackbar extends StatefulWidget {
   final String message;
   final IconData icon;
   final Color backgroundColor;
@@ -68,7 +62,7 @@ class _AnimatedSnackbar extends StatefulWidget {
   final VoidCallback? onAction;
   final Duration duration;
 
-  const _AnimatedSnackbar({
+  const _TopAnimatedSnackbar({
     required this.message,
     required this.icon,
     required this.backgroundColor,
@@ -78,10 +72,10 @@ class _AnimatedSnackbar extends StatefulWidget {
   });
 
   @override
-  State<_AnimatedSnackbar> createState() => _AnimatedSnackbarState();
+  State<_TopAnimatedSnackbar> createState() => _TopAnimatedSnackbarState();
 }
 
-class _AnimatedSnackbarState extends State<_AnimatedSnackbar>
+class _TopAnimatedSnackbarState extends State<_TopAnimatedSnackbar>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<Offset> _slideAnimation;
@@ -93,11 +87,11 @@ class _AnimatedSnackbarState extends State<_AnimatedSnackbar>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 350),
     );
 
     _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 1.0), // start off-screen bottom
+      begin: const Offset(0, -1.0), // from top
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
@@ -108,9 +102,10 @@ class _AnimatedSnackbarState extends State<_AnimatedSnackbar>
 
     _controller.forward();
 
-    // Auto-reverse after duration
     Future.delayed(widget.duration, () {
-      if (mounted) _controller.reverse();
+      if (mounted) {
+        _controller.reverse();
+      }
     });
   }
 
@@ -122,8 +117,10 @@ class _AnimatedSnackbarState extends State<_AnimatedSnackbar>
 
   @override
   Widget build(BuildContext context) {
+    final topPadding = MediaQuery.of(context).padding.top;
+
     return Positioned(
-      bottom: 20,
+      top: topPadding + 16,
       left: 16,
       right: 16,
       child: SlideTransition(
@@ -136,16 +133,17 @@ class _AnimatedSnackbarState extends State<_AnimatedSnackbar>
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: widget.backgroundColor,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 6,
-                    offset: const Offset(0, 3),
+                    color: Colors.black.withOpacity(0.25),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(widget.icon, color: AppColors.white),
                   const SizedBox(width: 12),
@@ -155,16 +153,18 @@ class _AnimatedSnackbarState extends State<_AnimatedSnackbar>
                       style: const TextStyle(
                         color: AppColors.white,
                         fontSize: 14,
+                        height: 1.3,
                       ),
                     ),
                   ),
                   if (widget.actionLabel != null && widget.onAction != null)
                     TextButton(
                       onPressed: widget.onAction,
-                      child: Text(
-                        widget.actionLabel!,
-                        style: const TextStyle(color: AppColors.white),
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.white,
+                        padding: EdgeInsets.zero,
                       ),
+                      child: Text(widget.actionLabel!),
                     ),
                 ],
               ),
