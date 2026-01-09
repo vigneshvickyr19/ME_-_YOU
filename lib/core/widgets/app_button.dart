@@ -30,11 +30,7 @@ class AppButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isEnabled ? onPressed : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: isPrimary
-              ? isEnabled
-                    ? null // gradient handled inside _buildPrimary
-                    : AppColors.darkOverlay
-              : AppColors.black.withOpacity(0.3),
+          backgroundColor: Colors.transparent,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
@@ -49,6 +45,7 @@ class AppButton extends StatelessWidget {
     );
   }
 
+  // ---------- PRIMARY BUTTON ----------
   Widget _buildPrimary() {
     return Ink(
       decoration: BoxDecoration(
@@ -59,7 +56,7 @@ class AppButton extends StatelessWidget {
                 colors: [AppColors.primary, AppColors.secondary],
               )
             : null,
-        color: isEnabled ? null : AppColors.greyLight,
+        color: isEnabled ? null : AppColors.darkOverlay, // ✅ HERE
         borderRadius: BorderRadius.circular(30),
       ),
       child: Center(
@@ -75,23 +72,32 @@ class AppButton extends StatelessWidget {
     );
   }
 
+  // ---------- TRANSPARENT BUTTON ----------
   Widget _buildTransparent() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        if (iconPath != null) ...[
-          SvgPicture.asset(iconPath!, height: 20),
-          const SizedBox(width: 12),
-        ],
-        Text(
-          text,
-          style: TextStyle(
-            color: isEnabled ? AppColors.white : AppColors.greyDark,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
+    return Container(
+      decoration: BoxDecoration(
+        color: isEnabled
+            ? Colors.transparent
+            : AppColors.darkOverlay, // ✅ HERE also
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (iconPath != null) ...[
+            SvgPicture.asset(iconPath!, height: 20),
+            const SizedBox(width: 12),
+          ],
+          Text(
+            text,
+            style: TextStyle(
+              color: isEnabled ? AppColors.white : AppColors.greyDark,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
