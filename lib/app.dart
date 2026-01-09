@@ -8,7 +8,7 @@ import 'features/auth/presentation/pages/forgotPassword_page.dart';
 import 'features/auth/presentation/pages/sign_up_page.dart';
 import 'features/auth/presentation/pages/verify_code_page.dart';
 import 'features/auth/presentation/pages/create_password_page.dart';
-import 'features/home/presentation/pages/home_page.dart';
+import 'features/home/presentation/pages/home_shell_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         AppRoutes.verifyCode: (_) => const VerifyCodePage(),
         AppRoutes.createPassword: (_) => const CreatePasswordPage(),
 
-        AppRoutes.home: (_) => const HomePage(),
+        AppRoutes.home: (_) => const HomeShellPage(),
       },
     );
   }
