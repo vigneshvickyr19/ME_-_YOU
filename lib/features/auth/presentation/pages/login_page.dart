@@ -75,6 +75,7 @@ class _LoginPageState extends State<LoginPage> {
           child: AppBackButton(),
         ),
       ),
+
       body: SafeArea(
         child: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -84,7 +85,6 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               const SizedBox(height: 20),
 
-              // Title
               const Text(
                 "Login with email",
                 style: TextStyle(
@@ -101,7 +101,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 32),
 
-              // Email
               AppInput(
                 label: "Email",
                 hint: "Enter your email",
@@ -112,7 +111,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 16),
 
-              // Password
               AppInput(
                 label: "Password",
                 hint: "Enter password",
@@ -124,7 +122,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 10),
 
-              // Forgot Password (✔️ ADDED & FIXED)
               Align(
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
@@ -142,48 +139,48 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 120), // space for bottom bar
+            ],
+          ),
+        ),
+      ),
 
-              // Continue Button
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
               AppButton(
                 text: "Continue",
                 onPressed: _onSubmit,
                 isEnabled: _isButtonEnabled,
               ),
+              const SizedBox(height: 20),
 
-              const SizedBox(height: 24),
-
-              // Sign Up text
-              Center(
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, AppRoutes.signUp);
-                  },
-                  child: RichText(
-                    text: const TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "Don't have an account? ",
-                          style: TextStyle(
-                            color: AppColors.white,
-                            fontSize: 14,
-                          ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.signUp);
+                },
+                child: RichText(
+                  text: const TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Don't have an account? ",
+                        style: TextStyle(color: AppColors.white, fontSize: 14),
+                      ),
+                      TextSpan(
+                        text: "Sign up",
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
                         ),
-                        TextSpan(
-                          text: "Sign up",
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-
-              const SizedBox(height: 32),
             ],
           ),
         ),
