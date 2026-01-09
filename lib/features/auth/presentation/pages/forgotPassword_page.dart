@@ -63,7 +63,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: const AppBackButton(),
+        leading: const Padding(
+          padding: EdgeInsets.all(8),
+          child: AppBackButton(),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
